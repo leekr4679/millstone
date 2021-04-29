@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+
+    <!-- Page css -->
+    <th:block layout:fragment="css"></th:block>
+
+    <!-- Page js -->
+    <th:block layout:fragment="script"></th:block>
+
+<body layout:fragment="content">
+    <div>
+        <div style="border: 1px solid red; height: 200px; text-align: center; background: yellow">
+            <form th:action="@{/regist}" method="post">
+                <span>Id</span>
+                <input type="text" id="userId" name="userId" />
+
+                <span>Passwrod</span>
+                <input type="text" id="password" name="password" />
+                <button type="submit">저장</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

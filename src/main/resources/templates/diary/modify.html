@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>💬일기장수정</title>
+    <script src="https://cdn.ckeditor.com/ckeditor5/11.0.1/classic/ckeditor.js"></script>
+    <style>
+        .ck.ck-editor {
+            max-width: 500px;
+        }
+        .ck-editor__editable {
+            min-height: 300px;
+        }
+        #title {
+            margin: 0 auto;
+        }
+    </style>
+<body>
+    <form action="/modify" method="post" id="mrForm" th:object="${diary}">
+        <div class="mainText">
+            <input type="hidden" th:field="${diary.diaryId}">
+            <div>
+                <label>
+                    제목
+                    <input type="text" name="title" id="title" th:field="${diary.title}">
+                </label>
+            </div>
+            <div>
+                <label>
+                    작성자
+                    <input type="text" name="writer" id="writer" th:field="${diary.writer}">
+                </label>
+            </div>
+            <textarea name="content" id="editor" th:field="${diary.content}"></textarea>
+            <button onclick="validate()">등록</button>
+            <button onclick="location.href='/'">홈</button>
+        </div>
+    </form>
+
+    <script>
+        ClassicEditor
+        .create( document.querySelector( '#editor' ) )
+        .catch( function (error) {
+            console.log(error);
+            });
+
+        CKEDITOR.editorConfig = function( config ) {
+            CKEDITOR.dtd.$removeEmpty['i'] = false;
+            config.enterMode = CKEDITOR.ENTER_BR;
+            config.fillEmptyBlocks = false;
+        };
+
+        function validate() {
+            var mrForm = document.getElementById("#mrForm");
+            mrForm.submit();
+        }
+
+        /*function removeHTML(text) {
+            text = text.replace(/<br\/>/ig, "\n");
+            text = text.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
+            return text;
+        }*/
+    </script>
+</body>
+</html>

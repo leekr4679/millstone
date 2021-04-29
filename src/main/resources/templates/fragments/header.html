@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+    <header th:fragment="header">
+        <div class="header">
+            <span>Logo</span>
+            <a th:href="@{/admin/user}">유저목록</a>
+            <a th:href="@{#}">추천강의</a>
+            <a th:href="@{#}">공지사항</a>
+            <a th:href="@{#}">사이트소개</a>
+
+            <div style="float: right">
+                <input type="text"/>
+                <a th:href="@{/login}" sec:authorize="!isAuthenticated()">로그인</a>
+                <a th:href="@{/regist}" sec:authorize="!isAuthenticated()">회원가입</a>
+                <span sec:authorize="isAuthenticated()" th:text="${#authentication.getPrincipal().userNm}"></span>
+                <a th:href="@{/logout}" sec:authorize="isAuthenticated()">로그아웃</a>
+                <a th:href="@{/admin}" sec:authorize="hasRole('ROLE_ADMIN')">관리자</a>
+            </div>
+        </div>
+    </header>
+</html>

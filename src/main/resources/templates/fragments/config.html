@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+    <head th:fragment="config">
+        <!-- 공통 css, js -->
+        <script th:src="@{https://code.jquery.com/jquery-2.2.4.min.js}"></script>
+        <link rel="stylesheet" th:href="@{/css/layout.css}">
+        <script th:src="@{/js/millstone.js}"></script>
+
+        <!-- Page css -->
+        <th:block layout:fragment="css"></th:block>
+
+        <!-- Page js -->
+        <th:block layout:fragment="script"></th:block>
+    </head>
+</html>

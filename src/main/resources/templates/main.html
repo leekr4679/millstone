@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+
+    <!-- Page css -->
+    <th:block layout:fragment="css"></th:block>
+
+    <!-- Page js -->
+    <th:block layout:fragment="script"></th:block>
+
+<body layout:fragment="content">
+    <div>
+        <div style="height: 300px; text-align: center; border-bottom: 0.7px solid grey;">
+            Slid Images
+        </div>
+    </div>
+
+    <div style="width: 17%; border: 1px solid #111 ; float: right; height: 200px; right: 30px ;position: fixed; display: inline-block;">
+        <div style="margin: 5px 0 0 15px">
+            <a href="/write" style="text-decoration: none; color: black;">글쓰기</a>
+        </div>
+        <form action="/" method="post">
+            <div style="margin: 5px 0 0 15px">
+                <select name="option" id="option">
+                    <option value="title" selected="selected">제목</option>
+                    <option value="content">내용</option>
+                    <option value="writer">작성자</option>
+                </select>
+                <input type="text" id="filter" name="filter">
+                <button>검색</button>
+            </div>
+        </form>
+    </div>
+
+    <div th:if="${#lists.size(diary) == 0}" style="width: 950px; margin: 0 auto;"> <h1 style="text-align: center">일기글이 없습니다!</h1> </div>
+
+    <div th:each="diarys : ${diary}">
+        <div style="width: 930px; margin: 0 auto; height: 400px; position: relative;">
+            <h2 th:text="${diarys.title}" style="display: inline-block; margin-bottom: 0;"></h2>
+            <h5 th:text="${diarys.writer}" style="display: inline-block; margin-bottom: 0;"></h5>
+            <a th:href="@{'/modify/' + ${diarys.diaryId}}"
+               style="position:absolute; right: 50px; width: 45px; margin-bottom: 0; top: 15px; text-decoration: none; color: black;">수정</a>
+            <a th:href="@{'/delete/' + ${diarys.diaryId}}"
+               style="position:absolute; right: 0;  width: 45px; margin-bottom: 0; top: 15px; text-decoration: none; color: black;">삭제</a>
+
+            <div style="border: 0.7px solid grey; width: 100%; height: 300px; padding: 0 10px 0 10px;" th:utext="${diarys.content}"></div>
+        </div>
+    </div>
+
+</body>
+</html>

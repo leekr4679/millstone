@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/default">
+
+    <!-- Page css -->
+    <th:block layout:fragment="css"></th:block>
+
+    <!-- Page js -->
+    <th:block layout:fragment="script"></th:block>
+
+<body layout:fragment="content">
+    <div>
+        <div style="border: 1px solid red; height: 200px; text-align: center; background: yellow">
+            Denied Page
+        </div>
+    </div>
+</body>
+</html>
