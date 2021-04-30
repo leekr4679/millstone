@@ -1,10 +1,17 @@
 package com.base.app.domain.diary;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.multipart.MultipartRequest;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 @Service
 public class DiaryService {
@@ -46,7 +53,24 @@ public class DiaryService {
      *   RETURN : void
      *   FUNCTION : diary 객체(title, writer, content) 저장
      * */
-    public void write(Diary diary) { diaryRepository.save(diary); }
+    public void write(Diary diary, HttpServletRequest request, MultipartFile files) {
+        String domain = request.getServerName();
+        String path = "/imageFile";
+
+        String file_path = request.getSession().getServletContext().getRealPath("imageFile");
+        File file = new File(file_path);
+        if (!file.exists()) {
+            try {
+                file.mkdir();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        String image_path = domain + ":" + request.getLocalPort() + path + "/" + diary.getImagePath();
+        diary.setImagePath(image_path);
+
+        diaryRepository.save(diary); }
 
     /*
      *   일기 수정

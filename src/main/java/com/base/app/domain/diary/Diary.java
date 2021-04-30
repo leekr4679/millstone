@@ -24,4 +24,7 @@ public class Diary {
 
     @Column
     private String content; //일기 내용
+
+    @Column
+    private String imagePath; //이미지 url
 }

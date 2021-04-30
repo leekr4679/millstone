@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>💬일기장쓰기</title>
-    <script src="https://cdn.ckeditor.com/ckeditor5/11.0.1/classic/ckeditor.js"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/12.4.0/classic/ckeditor.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <style>
     .ck.ck-editor {
         max-width: 500px;
@@ -31,6 +32,10 @@
                     <input type="text" name="writer" id="writer">
                 </label>
             </div>
+            <div>
+                <label for="imagePath">이미지</label>
+                <input type="file" name="imagePath" id="imagePath" multiple="multiple">
+            </div>
             <textarea name="content" id="editor"></textarea>
             <button onclick="validate()">등록</button>
             <button onclick="location.href='/'">홈</button>
@@ -38,28 +43,20 @@
     </form>
 
     <script>
+        var myEditor;
         ClassicEditor
-        .create( document.querySelector( '#editor' ) )
-        .catch( function (error) {
-            console.log(error);
-        });
-
-        CKEDITOR.editorConfig = function( config ) {
-            CKEDITOR.dtd.$removeEmpty['i'] = false;
-            config.enterMode = CKEDITOR.ENTER_BR;
-            config.fillEmptyBlocks = false;
-        };
+        .create( document.querySelector( '#editor' ), {
+            // 제거 하고싶은 플러그인 (배열)
+            removePlugins: [ 'ImageUpload' ]
+        } )
+        .catch( error => {
+            console.error( error );
+        } );
 
         function validate() {
             var mrForm = document.getElementById("#mrForm");
             mrForm.submit();
         }
-
-        /*function removeHTML(text) {
-            text = text.replace(/<br\/>/ig, "\n");
-            text = text.replace(/<(\/)?([a-zA-Z]*)(\s[a-zA-Z]*=[^>]*)?(\s)*(\/)?>/ig, "");
-            return text;
-        }*/
     </script>
 </body>
 </html>

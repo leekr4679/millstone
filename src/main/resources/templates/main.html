@@ -44,9 +44,11 @@
             <a th:href="@{'/delete/' + ${diarys.diaryId}}"
                style="position:absolute; right: 0;  width: 45px; margin-bottom: 0; top: 15px; text-decoration: none; color: black;">삭제</a>
 
+            <div>
+                <img alt="사진" th:src="${diarys.imagePath}" style="width: 300px; height: 300px;">
+            </div>
             <div style="border: 0.7px solid grey; width: 100%; height: 300px; padding: 0 10px 0 10px;" th:utext="${diarys.content}"></div>
         </div>
     </div>
-
 </body>
 </html>

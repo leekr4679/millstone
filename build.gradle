@@ -17,6 +17,9 @@ configurations {
 
 repositories {
     mavenCentral()
+    maven {
+        url = 'https://maven.cksource.com/'
+    }
 }
 
 dependencies {
@@ -32,9 +35,11 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'
 
+    compile 'com.cksource:ckfinder3:3.5.1.1'
     compile 'com.querydsl:querydsl-jpa'
     compile 'com.querydsl:querydsl-apt'
     compile 'com.querydsl:querydsl-core'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     runtimeOnly 'com.h2database:h2'

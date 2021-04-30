@@ -5,11 +5,10 @@ import com.base.app.domain.diary.DiaryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Controller
@@ -24,7 +23,7 @@ public class MainController {
      *   SERVICE : list(String filter, String option)
      *   FUNCTION : 검색어와 검색조건이 없으면 모든 목록 불러옴, 검색어와 검색옵션이 있으면 조건에 검색조건에 맞춰 목록 불러옴
      * */
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @RequestMapping(value = "")
     public String main(Model model, String filter, String option) {
         List<Diary> list = diaryService.list(filter, option);
         model.addAttribute("diary", list);
@@ -49,8 +48,8 @@ public class MainController {
      *   FUNCTION : diary 객체(title, writer, content) 저장
      * */
     @RequestMapping(value = "/write", method = RequestMethod.POST)
-    public String write(Diary diary) {
-        diaryService.write(diary);
+    public String write(Diary diary, HttpServletRequest request, MultipartFile files) {
+        diaryService.write(diary, request, files);
         return "redirect:/";
     }
 
