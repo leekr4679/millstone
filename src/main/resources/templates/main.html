@@ -9,46 +9,108 @@
     <!-- Page js -->
     <th:block layout:fragment="script"></th:block>
 
-<body layout:fragment="content">
-    <div>
-        <div style="height: 300px; text-align: center; border-bottom: 0.7px solid grey;">
-            Slid Images
-        </div>
-    </div>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
 
-    <div style="width: 17%; border: 1px solid #111 ; float: right; height: 200px; right: 30px ;position: fixed; display: inline-block;">
-        <div style="margin: 5px 0 0 15px">
-            <a href="/write" style="text-decoration: none; color: black;">글쓰기</a>
-        </div>
-        <form action="/" method="post">
-            <div style="margin: 5px 0 0 15px">
-                <select name="option" id="option">
-                    <option value="title" selected="selected">제목</option>
-                    <option value="content">내용</option>
-                    <option value="writer">작성자</option>
-                </select>
-                <input type="text" id="filter" name="filter">
-                <button>검색</button>
+    <body layout:fragment="content">
+        <div>
+            <div style="height: 300px; text-align: center; border-bottom: 0.7px solid grey; background-color: #8a98eb">
+                slide image
             </div>
-        </form>
-    </div>
-
-    <div th:if="${#lists.size(diary) == 0}" style="width: 950px; margin: 0 auto;"> <h1 style="text-align: center">일기글이 없습니다!</h1> </div>
-
-    <div th:each="diarys : ${diary}">
-        <div style="width: 930px; margin: 0 auto; height: 400px; position: relative;">
-            <h2 th:text="${diarys.title}" style="display: inline-block; margin-bottom: 0;"></h2>
-            <h5 th:text="${diarys.writer}" style="display: inline-block; margin-bottom: 0;"></h5>
-            <a th:href="@{'/modify/' + ${diarys.diaryId}}"
-               style="position:absolute; right: 50px; width: 45px; margin-bottom: 0; top: 15px; text-decoration: none; color: black;">수정</a>
-            <a th:href="@{'/delete/' + ${diarys.diaryId}}"
-               style="position:absolute; right: 0;  width: 45px; margin-bottom: 0; top: 15px; text-decoration: none; color: black;">삭제</a>
-
-            <div>
-                <img alt="사진" th:src="${diarys.imagePath}" style="width: 300px; height: 300px;">
-            </div>
-            <div style="border: 0.7px solid grey; width: 100%; height: 300px; padding: 0 10px 0 10px;" th:utext="${diarys.content}"></div>
         </div>
-    </div>
-</body>
+
+        <div style="width: 17%; float: right; height: 200px; right: 300px ;position: fixed; display: inline-block; margin-top: 50px">
+            <div style="margin: 5px 0 0 15px;">
+                <a href="/write" style="text-decoration: none; color: black;">글쓰기</a>
+            </div>
+            <form action="/search" method="get">
+                <div style="margin: 5px 0 0 15px">
+                    <select name="option" id="option">
+                        <option value="title" selected="selected">제목</option>
+                        <option value="content">내용</option>
+                        <option value="writer">작성자</option>
+                    </select>
+                    <input type="text" id="filter" name="filter">
+                    <button>검색</button>
+                </div>
+            </form>
+        </div>
+
+        <div th:if="${#lists.size(diary) == 0}" style="width: 950px; margin: 0 auto;"> <h1 style="text-align: center">일기글이 없습니다!</h1> </div>
+
+        <div id="list" >
+            <div th:each="diarys : ${diary}" class="p-index">
+                <div style="width: 650px; height: auto; position: relative; margin: 50px auto;  border: 1px solid #8b96a2; border-radius: 5px 5px 5px 5px;" class="container">
+                    <input type="hidden" th:value="${diarys.diaryId}">
+                    <h2 th:text="${diarys.title}" style="display: inline-block; margin-bottom: 5px; margin-left: 5px;"></h2>
+                    <h5 th:text="${diarys.writer}" style="display: inline-block; margin-bottom: 5px;"></h5>
+                    <a th:href="@{'/modify/' + ${diarys.diaryId}}"
+                       style="position:absolute; right: 50px; width: 45px; margin-bottom: 0; top: 32px; text-decoration: none; color: black;">수정</a>
+                    <a th:href="@{'/delete/' + ${diarys.diaryId}}"
+                       style="position:absolute; right: 0;  width: 45px; margin-bottom: 0; top: 32px; text-decoration: none; color: black;">삭제</a>
+
+                    <div style="margin: 0 auto;">
+                        <img id="imagePreview" th:alt="${diarys.writer} + '님의 이미지'" th:src="${diarys.imagePath}" style="width: 650px; height: 650px; border-radius: 5px 5px 5px 5px;">
+                    </div>
+                    <div style="border: 0.7px solid #3d027b; border-radius: 5px 5px 5px 5px; width: 620px; height: 280px; padding: 0 10px 0 10px; margin: 0 auto 5px;" th:utext="${diarys.content}"></div>
+                </div>
+            </div>
+        </div>
+        <script>
+            var pageNum = 1;
+            $(document).ready(function () {
+                $(window).scroll(function () {
+                    var scrollT = $(this).scrollTop();
+                    var scrollH = $(this).height();
+                    var contentH = $(".p-index").height();
+                    if (scrollT + scrollH + 1 >= contentH && !temp) {
+                        page++;
+                        select_list();
+                    }
+                });
+            });
+            window.onscroll = function(ev) {
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                    select_list();
+                }
+            };
+
+            function select_list() {
+                $.ajax({
+                    url: '/',
+                    type: 'post',
+                    dataType: "json",
+                    data: JSON.stringify(pageNum),
+                    contentType:"application/json; charset=UTF-8",
+                    success: function (data) {
+                        if(data.content.length > 0) {
+                            pageNum++;
+
+                            data.content.forEach(function(n) {
+                                $("#list").append(`
+                                <div class="p-index">
+                                    <div  style="width: 650px; height: auto; position: relative; margin: 50px auto;  border: 1px solid #8b96a2; border-radius: 5px 5px 5px 5px;" class="container">
+                                        <input type="hidden" value=${n.diaryId}>
+                                        <h2 style="display: inline-block; margin-bottom: 5px; margin-left: 5px;">${n.title}</h2>
+                                        <h5 style="display: inline-block; margin-bottom: 5px;">${n.writer}</h5>
+                                        <a href="/modify/${n.diaryId}" style="position:absolute; right: 50px; width: 45px; margin-bottom: 0; top: 32px; text-decoration: none; color: black;">수정</a>
+                                        <a href="/delete/${n.diaryId}" style="position:absolute; right: 0;  width: 45px; margin-bottom: 0; top: 32px; text-decoration: none; color: black;">삭제</a>
+
+                                        <div style="margin: 0 auto;">
+                                            <img alt="${n.writer}님의 이미지" src="${n.imagePath}" style="width: 650px; height: 650px; border-radius: 5px 5px 5px 5px;">
+                                        </div>
+                                        <div style="border: 0.7px solid #3d027b; border-radius: 5px 5px 5px 5px; width: 620px; height: 280px; padding: 0 10px 0 10px; margin: 0 auto 5px;">${n.content}</div>
+                                    </div>
+                                </div>
+                            `);
+                            })
+                        }
+                    },
+                    error: function (data) {
+                        alert("불러오기에 실패했습니다.");
+                    }
+                });
+            }
+        </script>
+    </body>
 </html>

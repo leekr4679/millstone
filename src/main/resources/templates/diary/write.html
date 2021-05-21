@@ -3,60 +3,117 @@
 <head>
     <meta charset="UTF-8">
     <title>💬일기장쓰기</title>
+
     <script src="https://cdn.ckeditor.com/ckeditor5/12.4.0/classic/ckeditor.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+            crossorigin="anonymous"></script>
+
     <style>
-    .ck.ck-editor {
-        max-width: 500px;
-    }
-    .ck-editor__editable {
-        min-height: 300px;
-    }
-    #title {
-        margin: 0 auto;
-    }
-</style>
+        .ck.ck-editor {
+            max-width: 500px;
+        }
+        .ck-editor__editable {
+            min-height: 300px;
+        }
+
+        #title {
+            margin: 5px auto 0 15px;
+        }
+        ._text {
+            margin: 5px 0px 5px 5px;
+        }
+        ._content {
+            margin: 5px 0px 5px 0px;
+            height: 30px;
+        }
+    </style>
 </head>
 <body>
-    <form action="/write" method="post" id="mrForm">
-        <div class="mainText">
-            <div>
-                <label>
-                    제목
-                    <input type="text" name="title" id="title">
-                </label>
+    <div>
+        <div style="width: 650px; height: auto; margin: 50px auto; border: 1px solid black; border-radius: 5px 5px 5px 5px;">
+            <div style="height: 15%; width: 100%; border: 1px solid black; margin: 5px auto 0; border-left: 0; border-right: 0; padding: 0">
+                <h1 style="text-align: center;">DIARY - WRITE</h1>
             </div>
-            <div>
-                <label>
-                    작성자
-                    <input type="text" name="writer" id="writer">
-                </label>
-            </div>
-            <div>
-                <label for="imagePath">이미지</label>
-                <input type="file" name="imagePath" id="imagePath" multiple="multiple">
-            </div>
-            <textarea name="content" id="editor"></textarea>
-            <button onclick="validate()">등록</button>
-            <button onclick="location.href='/'">홈</button>
+                <form action="/write" method="post" id="mrForm" enctype="multipart/form-data">
+                    <div class="mainText">
+                        <div>
+                            <label class="_text">
+                                제목
+                                <input class="_content" type="text" name="title" id="title" autocomplete='off' placeholder="제목을 입력해주세요."
+                                    title="제목" data-type="required" />
+                            </label>
+                        </div>
+                        <div>
+                            <label class="_text">
+                                작성자
+                                <input class="_content" type="text" name="writer" id="writer" autocomplete='off' placeholder="작성자명을 입력해주세요."
+                                       title="작성자" data-type="required"/>
+                            </label>
+                        </div>
+                        <div>
+                            <label for="imagePath" class="_text">이미지</label>
+                            <input type="file" class="_content" name="imageFile" id="imagePath" onchange="setThumbnail(event);" title="이미지" data-type="required"
+                                    accept="image/*" />
+                            <div id="image_container"></div>
+                        </div>
+                        <textarea class="_content" name="content" id="editor"></textarea>
+                        <div style="margin: 5px 0px 5px 5px; height: 30px;">
+                            <button type="button" onclick="save()">등록</button>
+                            <button onclick="location.href='/'">홈</button>
+                        </div>
+                    </div>
+            </form>
         </div>
-    </form>
+    </div>
 
     <script>
+        function setThumbnail(event) {
+            var reader = new FileReader();
+
+            reader.onload = function (event) {
+                var img = document.createElement("img");
+                img.setAttribute("src", event.target.result);
+                img.style.width = "300px";
+                img.style.height = "300px";
+                document.querySelector("div#image_container").innerHTML = '';
+                document.querySelector("div#image_container").appendChild(img);
+            };
+
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function validate() {
+            var result = true;
+            $("[data-type='required']").each(function () {
+                if(!$(this).val()) {
+                    alert($(this).attr("title") + "를(을) 입력해주세요.");
+                    $(this).focus();
+                    return result = false;
+                }
+            });
+
+            return result;
+        }
+
+        function save() {
+            if(validate()) {
+                 $("#mrForm").submit();
+            }
+        }
+
         var myEditor;
         ClassicEditor
         .create( document.querySelector( '#editor' ), {
             // 제거 하고싶은 플러그인 (배열)
-            removePlugins: [ 'ImageUpload' ]
+            removePlugins: [ 'ImageUpload' ],
+            //extraPlugins: [MyCustomUploadPlugin]
         } )
         .catch( error => {
             console.error( error );
         } );
-
-        function validate() {
-            var mrForm = document.getElementById("#mrForm");
-            mrForm.submit();
-        }
     </script>
 </body>
 </html>
